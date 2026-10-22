@@ -4,12 +4,13 @@ import { MongoClient } from "mongodb";
 import { Resend } from 'resend';
 
 
+const createAuth = () => {
 const client = new MongoClient(process.env.BETTER_AUTH_DB_URL!);
 const database = client.db('fitlog-auth-db');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const auth = betterAuth({
+return betterAuth({
 
     emailAndPassword: { 
     enabled: true,
@@ -70,3 +71,8 @@ account: {
         client,
     })
 })
+};
+
+export const auth = process.env.BETTER_AUTH_DB_URL && process.env.RESEND_API_KEY
+    ? createAuth()
+    : null;
